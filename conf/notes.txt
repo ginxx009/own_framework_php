@@ -1,0 +1,12 @@
+# Virtual Host Conf (/apache/conf/extra/httpd-vhosts.conf)
+
+<VirtualHost *:80>
+    ServerName delmover.com
+    ServerAlias www.delmover.com delmover.com
+    DocumentRoot "c:/xampp/htdocs/delmover/public"
+
+    <Directory "c:/xampp/htdocs/delmover/public">
+    </Directory>
+</VirtualHost>
+
+# After setting virtual host config, add the server alias on the hosts file (C:\Windows\System32\drivers\etc\hosts).
