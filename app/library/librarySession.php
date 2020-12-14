@@ -51,4 +51,9 @@ class librarySession
     {
         return self::isset('isLoggedIn') === true && (int) self::get('user_category') !== 2;
     }
+
+    public static function destroy()
+    {
+        session_destroy();
+    }
 }

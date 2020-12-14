@@ -1,0 +1,76 @@
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        TOP UP
+      </h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Top up Requests</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Amount Request</th>
+                  <th>Username</th>
+				  <th>Date Approved</th>
+                  <th>Confirmation</th>
+                </tr>
+                </thead>
+                <tbody>
+                  <?php 
+                  foreach($getAllRequest as $data)
+                  {
+                    echo '<tr>';
+                    echo '<td>'.$data['user_id'].'</td>';
+                    echo '<td>'.$data['amount'].'</td>';
+                    echo '<td>'.$data['username'].'</td>';
+					if($data['date_approved'] == "0000-00-00 00:00:00")
+					{
+						echo '<td>Waiting for Approval</td>';
+					}
+					else
+					{
+						echo '<td>'.$data['date_approved'].'</td>';
+					}
+					
+					if($data['confirmed'] == 0)
+					{
+						echo '<td>';
+						echo '<a href="../model/admin_top_up_confirm.php?user_id='.$data['user_id'].'" class="btn btn-success btn-circle"><i class="fa  fa-check-circle"></i></a>';
+						echo '<a href="../model/admin_top_up_decline.php?user_id='.$data['user_id'].'" class="btn btn-danger btn-circle"><i class="fa  fa-trash"></i></a>';
+						echo '</td>';
+					}
+					else
+					{
+						echo '<td>Approved</td>';
+					}
+					echo '</tr>';
+                  }
+                  ?>
+                </tbody>
+               <!--  <tfoot>
+                <tr>
+                  <th>Rendering engine</th>
+                  <th>Browser</th>
+                  <th>Platform(s)</th>
+                  <th>Engine version</th>
+                  <th>CSS grade</th>
+                </tr>
+                </tfoot> -->
+              </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->

@@ -20,6 +20,11 @@ class coreView
     protected $aViewData;
 
     /**
+     * @var string $sTplDir
+     */
+    private $sTplDir;
+
+    /**
      * __construct
      * @param string $sViewFile
      * @param array  $aViewData
@@ -28,7 +33,9 @@ class coreView
     {
         $this->sViewFile = VIEW . $sViewFile . '.phtml';
         $this->aViewData = $aViewData;
-        $this->aViewData['sPageName'] = explode('/', $sViewFile)[1];
+        $aViewFile = explode('/', $sViewFile);
+        $this->aViewData['sPageName'] = $aViewFile[1];
+        $this->sTplDir = $aViewFile[0];
         $this->render();
     }
 
@@ -40,7 +47,9 @@ class coreView
     {
         if (file_exists($this->sViewFile) === true) {
             extract($this->aViewData);
+            include_once $this->sTplDir . '/template/header.phtml';
             include_once $this->sViewFile;
+            include_once $this->sTplDir . '/template/footer.phtml';
         }
     }
 }

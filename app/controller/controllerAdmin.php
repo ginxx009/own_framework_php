@@ -28,7 +28,60 @@ class controllerAdmin extends controllerBase
     public function index()
     {
         $this->checkLogin();
-        $this->view('index');
+
+        $aData  = array(
+            'getUser'       => librarySession::get('username'),
+            'applicants'    => $this->oModel->CountDriver(),
+            'drivers'       => $this->oModel->FetchLegitDrivers(),
+            'countDriver'   => $this->oModel->CountLegitDrivers(),
+            'topuprequests' => $this->oModel->GetAllTopUpRequest()
+        );
+
+        $this->view('index', $aData);
+    }
+
+    /**
+     * Drivers
+     */
+    public function drivers()
+    {
+        $this->checkLogin();
+        $aData = array(
+            'getUser'      => librarySession::get('username'),
+            'getAllDriver' => $this->oModel->FetchAllDriver()
+        );
+        $this->view('drivers', $aData);
+    }
+
+    /**
+     * TopUpRequest
+     */
+
+    public function topuprequest()
+    {
+        $this->checkLogin();
+        $aData = array(
+            'getUser'       => librarySession::get('username'),
+            'getAllRequest' => $this->oModel->FetchTopUpRequest()
+        );
+        $this->view('topuprequest', $aData);
+    }
+
+    /**
+     * Admin Confirmation for accepting driver
+     */
+    public function admin_confirm()
+    {
+        $id = $this->aUrlParams[0];
+        $log_message = "Welcome to delmover. Get your first top up now !";
+        $date_log = date('Y-m-d H:i:s');
+        if ($this->oModel->ApproveDriver($id, 1)) {
+            $this->oModel->InsertHistoryLog($id, $log_message, $date_log);
+            libraryJavascript::redirect('/admin/drivers');
+        } else {
+
+            libraryJavascript::alertRedirect('There was something wrong.', '/admin/drivers');
+        }
     }
 
     /**
@@ -44,28 +97,44 @@ class controllerAdmin extends controllerBase
      */
     public function doLogin()
     {
-        var_dump($this->aPostData);
+        $username = $this->aPostData['username'];
+        $password = $this->aPostData['password'];
 
-        // if (isset($_POST['btn-login'])) {
-        //     $username = $_POST['username'];
-        //     $password = $_POST['password'];
-        //     if ($user->Login($username, $password)) {
+        $aQueryResult = $this->oModel->Login($username, $password);
+        $aUserDetails = $aQueryResult['details'];
 
-        //         $category = $_SESSION['user_category'];
+        $result = array(
+            'bResult' => false,
+            'sMsg'    => 'No Existing Credential Found!'
+        );
 
-        //         if ($category == 0) {
-        //             libraryJavascript::redirect('/user');
-        //         }
-        //         else if ($category == 1) {
-        //             libraryJavascript::redirect('/admin');
-        //         }
-        //         else {
-        //             $error = "No Existing Credential Found!";
-        //         }
-        //     } else {
-        //         libraryJavascript::alert('Incorrect Credential');
-        //     }
-        // }
+        if ($aQueryResult['rowCount'] > 0) {
+            if (password_verify($password, $aUserDetails['password'])) {
+                librarySession::set('user_session', $aUserDetails['username']);
+                librarySession::set('user_category', $aUserDetails['category']);
+                librarySession::set('username', $aUserDetails['fullname']);
+                librarySession::set('isLoggedIn', $aUserDetails['category'] != 2);
+
+                if ($aUserDetails['category'] == 0) {
+                    $result = array(
+                        'bResult' => true,
+                        'sUrl'    => '/user'
+                    );
+                } else if ($aUserDetails['category'] == 1) {
+                    $result = array(
+                        'bResult' => true,
+                        'sUrl'    => '/admin'
+                    );
+                }
+            } else {
+                $result = array(
+                    'bResult' => false,
+                    'sMsg'    => 'Incorrect credentials!'
+                );
+            }
+        }
+
+        echo json_encode($result);
     }
 
     /**
@@ -90,5 +159,11 @@ class controllerAdmin extends controllerBase
         //     }
         //     exit();
         // }
+    }
+
+    public function doLogout()
+    {
+        librarySession::destroy();
+        libraryJavascript::redirect('/');
     }
 }

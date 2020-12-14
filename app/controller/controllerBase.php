@@ -34,6 +34,7 @@ class controllerBase extends coreController
     public function checkLogin()
     {
         if (librarySession::isLogined() === false) {
+            librarySession::destroy();
             libraryJavascript::redirect('/admin/login');
             exit();
         }

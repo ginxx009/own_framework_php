@@ -1,0 +1,87 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Drivers
+        </h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Driver Applicants</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Address</th>
+                            <th>Phone Number</th>
+                            <th>Email Address</th>
+                            <th>Image</th>
+                            <th>NBI</th>
+                            <th>License</th>
+                            <th>OR/CR</th>
+                            <th>Image Vehicle Front</th>
+                            <th>Image Vehicle Back</th>
+                            <th>Vehicle Model</th>
+                            <th>Plate Number</th>
+                            <th>Training Date</th>
+                            <th>Confirm Account</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($getAllDriver as $data) {
+                            echo '<tr>';
+                            echo '<td>' . $data['fullname'] . '</td>';
+                            echo '<td>' . $data['address'] . '</td>';
+                            echo '<td>' . $data['phonenumber'] . '</td>';
+                            echo '<td>' . $data['emailaddress'] . '</td>';
+                            echo '<td><a href="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image']) . '"><img src="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image']) . '" class="img-responsive" style="width:100px;height:70px;"</a></td>';
+                            echo '<td><a href="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image_nbi']) . '"><img src="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image_nbi']) . '" class="img-responsive" style="width:100px;height:70px;"</a></td>';
+                            echo '<td><a href="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image_license']) . '"><img src="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image_license']) . '" class="img-responsive" style="width:100px;height:70px;"</a></td>';
+                            echo '<td><a href="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image_or_cr']) . '"><img src="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image_or_cr']) . '" class="img-responsive" style="width:100px;height:70px;"</a></td>';
+                            echo '<td><a href="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image_front']) . '"><img src="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image_front']) . '" class="img-responsive" style="width:100px;height:70px;"</a></td>';
+                            echo '<td><a href="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image_back']) . '"><img src="' . str_replace("192.168.254.123/delmover/admin/", "", $data['image_back']) . '" class="img-responsive" style="width:100px;height:70px;"</a></td>';
+                            echo '<td>' . $data['vehicle_model'] . '</td>';
+                            echo '<td>' . $data['plate_number'] . '</td>';
+                            echo '<td>' . $data['training_date'] . '</td>';
+                            if ($data['account_activated'] == 0) {
+                                echo '<td>';
+                                echo '<div class="row">';
+                                echo '<div class="col-md-6">';
+                                echo '<a href="/admin/admin_confirm/' . $data['id'] . '" class="btn btn-success btn-circle"><i class="fa  fa-check-circle"></i></a>';
+                                echo '</div>';
+                                echo '<div class="col-md-6">';
+                                echo '<a href="/model/admin_decline/?id=' . $data['id'] . '" class="btn btn-danger btn-circle"><i class="fa  fa-trash"></i></a>';
+                                echo '</div>';
+                                echo '</div>';
+                            } else {
+                                echo '<td>Approved</td>';
+                            }
+                            echo '</tr>';
+                        }
+                        ?>
+                    </tbody>
+                    <!--  <tfoot>
+                <tr>
+                  <th>Rendering engine</th>
+                  <th>Browser</th>
+                  <th>Platform(s)</th>
+                  <th>Engine version</th>
+                  <th>CSS grade</th>
+                </tr>
+                </tfoot> -->
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

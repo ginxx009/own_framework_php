@@ -42,6 +42,7 @@ class modelBase extends PDO
                 PDO::ATTR_EMULATE_PREPARES   => false,
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
             );
+
             parent::__construct($sDsn, $this->sUsername, $this->sPassword, $aOptions);
         } catch (PDOException $oException) {
             echo 'Connection failed: ' . $oException->getMessage();
