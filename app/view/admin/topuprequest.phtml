@@ -21,7 +21,7 @@
                   <th>User ID</th>
                   <th>Amount Request</th>
                   <th>Username</th>
-				  <th>Date Approved</th>
+				          <th>Date Approved</th>
                   <th>Confirmation</th>
                 </tr>
                 </thead>
@@ -45,8 +45,8 @@
 					if($data['confirmed'] == 0)
 					{
 						echo '<td>';
-						echo '<a href="../model/admin_top_up_confirm.php?user_id='.$data['user_id'].'" class="btn btn-success btn-circle"><i class="fa  fa-check-circle"></i></a>';
-						echo '<a href="../model/admin_top_up_decline.php?user_id='.$data['user_id'].'" class="btn btn-danger btn-circle"><i class="fa  fa-trash"></i></a>';
+						echo '<a href="/admin/top_up_confirm/' .$data['user_id']. '" class="btn btn-success btn-circle"><i class="fa  fa-check-circle"></i></a>';
+						echo '<a href="/admin/top_up_decline/' .$data['user_id']. '" class="btn btn-danger btn-circle"><i class="fa  fa-trash"></i></a>';
 						echo '</td>';
 					}
 					else

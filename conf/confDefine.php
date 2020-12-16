@@ -11,3 +11,4 @@ define('DATA', APP . 'data' . DS);
 define('CORE', APP . 'core' . DS);
 define('UPLOAD', APP . 'upload' . DS);
 define('LIBRARY', APP . 'library' . DS);
+define('API', APP . 'api' . DS);

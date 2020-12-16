@@ -2,7 +2,7 @@
 
 /**
  * modelBase
- * @author Aries V. Macandili <macandili.aries@gmail.com>
+ * @author Paul Kevin Macandili <macandili09@gmail.com>
  * @since 2020.12.05
  */
 class modelBase extends PDO

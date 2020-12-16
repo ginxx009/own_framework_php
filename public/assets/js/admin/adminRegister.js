@@ -1,7 +1,7 @@
 /**
- * ADMIN_LOGIN
- * Revealing module for login functionalities.
- * @author Aries V. Macandili <macandili.aries@gmail.com>
+ * ADMIN_REGISTER
+ * Revealing module for register functionalities.
+ * @author Paul Kevin Macandili <macandili09@gmail.com>
  * @since 2020.12.05
  */
 let ADMIN_REGISTER = (() => {

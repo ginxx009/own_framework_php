@@ -2,7 +2,7 @@
 
 /**
  * controllerAdmin
- * @author Aries V. Macandili <macandili.aries@gmail.com>
+ * @author Paul Kevin B. Macandili <macandili09@gmail.com>
  * @since 2020.12.05
  */
 class controllerAdmin extends controllerBase
@@ -20,6 +20,7 @@ class controllerAdmin extends controllerBase
         parent::__construct($aParams);
         $this->oModel = new modelAdmin();
         $this->sTplDir = 'admin';
+        $this->checkLoginAdmin();
     }
 
     /**
@@ -27,8 +28,7 @@ class controllerAdmin extends controllerBase
      */
     public function index()
     {
-        $this->checkLogin();
-
+        
         $aData  = array(
             'getUser'       => librarySession::get('username'),
             'applicants'    => $this->oModel->CountDriver(),
@@ -45,7 +45,7 @@ class controllerAdmin extends controllerBase
      */
     public function drivers()
     {
-        $this->checkLogin();
+        
         $aData = array(
             'getUser'      => librarySession::get('username'),
             'getAllDriver' => $this->oModel->FetchAllDriver()
@@ -59,7 +59,7 @@ class controllerAdmin extends controllerBase
 
     public function topuprequest()
     {
-        $this->checkLogin();
+       
         $aData = array(
             'getUser'       => librarySession::get('username'),
             'getAllRequest' => $this->oModel->FetchTopUpRequest()
@@ -85,85 +85,25 @@ class controllerAdmin extends controllerBase
     }
 
     /**
-     * login
+     * Admin Top Up Confirm
      */
-    public function login()
+    public function top_up_confirm()
     {
-        $this->view('login');
+        $getId = $this->aUrlParams[0];
+        $topUpRequest = $this->oModel->GetTopUpRequest($getId);
+        $log_message = "Successfully added an amount of ".$topUpRequest['amount']." to your load balance";
+        $date_log = date('Y-m-d H:i:s');
+        $getBalance = $this->oModel->fetchUserDataID($getId);
+        $newAmount = $getBalance['top_up'] + $topUpRequest['amount'];
+
+        $aData = $this->oModel->AddELoad($getId,$newAmount);
+        $this->oModel->UpdateConfirmation($getId,1,$date_log);
+        $this->oModel->InsertHistoryLog($getId,$log_message,$date_log);
+        libraryJavascript::redirect('/admin/topuprequest');
     }
 
-    /**
-     * doLogin
-     */
-    public function doLogin()
+    public function Logout()
     {
-        $username = $this->aPostData['username'];
-        $password = $this->aPostData['password'];
-
-        $aQueryResult = $this->oModel->Login($username, $password);
-        $aUserDetails = $aQueryResult['details'];
-
-        $result = array(
-            'bResult' => false,
-            'sMsg'    => 'No Existing Credential Found!'
-        );
-
-        if ($aQueryResult['rowCount'] > 0) {
-            if (password_verify($password, $aUserDetails['password'])) {
-                librarySession::set('user_session', $aUserDetails['username']);
-                librarySession::set('user_category', $aUserDetails['category']);
-                librarySession::set('username', $aUserDetails['fullname']);
-                librarySession::set('isLoggedIn', $aUserDetails['category'] != 2);
-
-                if ($aUserDetails['category'] == 0) {
-                    $result = array(
-                        'bResult' => true,
-                        'sUrl'    => '/user'
-                    );
-                } else if ($aUserDetails['category'] == 1) {
-                    $result = array(
-                        'bResult' => true,
-                        'sUrl'    => '/admin'
-                    );
-                }
-            } else {
-                $result = array(
-                    'bResult' => false,
-                    'sMsg'    => 'Incorrect credentials!'
-                );
-            }
-        }
-
-        echo json_encode($result);
-    }
-
-    /**
-     * register
-     */
-    public function register()
-    {
-        $this->view('register');
-    }
-
-    /**
-     * doRegister
-     */
-    public function doRegister()
-    {
-        // if (isset($_POST['fullname']) && isset($_POST['username']) && isset($_POST['password'])) {
-        //     if ($user->CheckUsernameIfExist($_POST['username'])) {
-        //         libraryJavascript::alert('Username Already Exist! Please change the username.');
-        //     } else {
-        //     if ($user->Registration($_POST['fullname'], $_POST['username'], $_POST['password'], 0)) {
-        //         libraryJavascript::alertRedirect('Registration Success', '/admin/login');
-        //     }
-        //     exit();
-        // }
-    }
-
-    public function doLogout()
-    {
-        librarySession::destroy();
-        libraryJavascript::redirect('/');
+        $this->doLogout();
     }
 }

@@ -2,7 +2,7 @@
 
 /**
  * coreApplication
- * @author Aries V. Macandili <macandili.aries@gmail.com>
+ * @author Paul Kevin Macandili <macandili09@gmail.com>
  * @since 2020.12.05
  */
 class coreApplication
@@ -44,17 +44,24 @@ class coreApplication
     private function prepareUrl()
     {
         $sRequestUri = trim($_SERVER['REQUEST_URI'], '/');
-
         if (empty($sRequestUri) === true) {
             $this->sController = 'controllerHome';
             return false;
         }
         
         $aUrl = explode('/', $sRequestUri);
-        $this->sController = 'controller' . strtoupper($aUrl[0] ?? 'home');
-        $this->sAction = $aUrl[1] ?? 'index';
-        unset($aUrl[0], $aUrl[1]);
-        $this->aParams = array_values($aUrl) ?? array();
+        if($aUrl[0] == 'api')
+        {
+            include_once $aUrl[1];
+            return false;
+        }
+        else
+        {
+            $this->sController = 'controller' . strtoupper($aUrl[0] ?? 'home');
+            $this->sAction = $aUrl[1] ?? 'index';
+            unset($aUrl[0], $aUrl[1]);
+            $this->aParams = array_values($aUrl) ?? array();
+        }
     }
 
     /**
@@ -62,6 +69,9 @@ class coreApplication
      */
     private function instantiateController()
     {
+        if(empty($this->sController))
+            return false;
+
         // Check if controller file actually exists.
         if (file_exists(CONTROLLER . $this->sController . '.php') === true) {
             $this->oClass = new $this->sController($this->aParams);

@@ -66,4 +66,37 @@ class modelAdmin extends modelBase
         $stmt->bindParam(":date_log", $date_log);
         return $stmt->execute();
     }
+
+    public function GetTopUpRequest($user_id)
+    {
+        $stmt = $this->prepare("SELECT * FROM topup_request WHERE user_id=:user_id AND confirmed=0");
+        $stmt->execute(array(':user_id' => $user_id));
+        return $stmt->fetch();
+    }
+
+    public function fetchUserDataID($user_id)
+    {
+        $stmt = $this->prepare("SELECT * FROM user_profile WHERE id=:user_id");
+        $stmt->execute(array(':user_id' => $user_id));
+        return $stmt->fetch();
+    }
+
+    public function AddELoad($user_id, $amount)
+    {
+        $stmt = $this->prepare("UPDATE user_profile SET top_up=:amount WHERE id=:user_id");
+        $stmt->bindParam(":user_id", $user_id);
+        $stmt->bindParam(":amount", $amount);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function UpdateConfirmation($user_id, $confirmed, $date_approved)
+    {
+        $stmt = $this->prepare("UPDATE topup_request SET confirmed=:confirmed, date_approved=:date_approved WHERE user_id=:user_id");
+        $stmt->bindParam(":user_id", $user_id);
+        $stmt->bindParam(":confirmed", $confirmed);
+        $stmt->bindParam(":date_approved", $date_approved);
+        $stmt->execute();
+        return $stmt;
+    }
 }

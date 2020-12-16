@@ -2,7 +2,7 @@
 
 /**
  * controllerBase
- * @author Aries V. Macandili <macandili.aries@gmail.com>
+ * @author Paul Kevin Macandili <macandili09@gmail.com>
  * @since 2020.12.05
  */
 class controllerBase extends coreController
@@ -29,14 +29,34 @@ class controllerBase extends coreController
     }
 
     /**
-     * checkLogin
+     * checkLogin for admin
      */
-    public function checkLogin()
+    public function checkLoginAdmin()
     {
-        if (librarySession::isLogined() === false) {
-            librarySession::destroy();
-            libraryJavascript::redirect('/admin/login');
-            exit();
+        if (librarySession::isLogined() === false) 
+        {
+            libraryJavascript::redirect('/login');
         }
+    }
+
+     /**
+     * checkLogin for admin
+     */
+    public function checkLoginUser()
+    {
+        if (librarySession::isLogined() === false) 
+        {
+            libraryJavascript::redirect('/login');
+        }
+    }
+
+    /**
+     * Logout
+     */
+
+    public function doLogout()
+    {
+        librarySession::destroy();
+        libraryJavascript::redirect('/');
     }
 }
